@@ -7,7 +7,8 @@ async function getProducts(): Promise<ProductProps[]> {
     cache: 'no-store',
   })
 
-  const products = await res.json()
+  const { products } = await res.json()
+
   return products
 }
 

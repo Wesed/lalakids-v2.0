@@ -12,7 +12,7 @@ async function getProduct(slug: string): Promise<ProductProps> {
       // revalidate: 60 * 60, // 1 hour
     },
   })
-  const product: ProductProps = await res.json()
+  const product = await res.json()
   return product
 }
 
@@ -27,7 +27,7 @@ export default async function ProductDetails({
     <div className="flex flex-col container p-0">
       <div className="">
         <Image
-          src={product.image}
+          src={product.images[0].url}
           alt="product image"
           width={320}
           height={400}
@@ -46,7 +46,7 @@ export default async function ProductDetails({
           </p>
         </div>
         <span className="text-sm">
-          <span className="font-semibold text-xl">R$ product.price</span> à
+          <span className="font-semibold text-xl">R$ {product.price}</span> à
           vista
         </span>
         <SelectedSizeContextProvider>

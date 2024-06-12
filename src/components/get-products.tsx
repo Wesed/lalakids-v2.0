@@ -4,8 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 interface ProductProps {
-  id: number
-  image: string
+  id: string
+  images: {
+    url: string
+  }[]
   title: string
   price: number
   category: string[]
@@ -19,7 +21,7 @@ interface ProductsProps {
 export function GetProducts({ products }: ProductsProps) {
   return (
     <>
-      {products.map((product) => (
+      {products.map((product, i) => (
         <Link
           href={`/product/${product.id}`}
           key={product.title}
@@ -27,7 +29,7 @@ export function GetProducts({ products }: ProductsProps) {
         >
           <div className="rounded-md overflow-hidden">
             <Image
-              src={product.image}
+              src={product.images[i].url}
               alt={product.title}
               width={160}
               height={200}

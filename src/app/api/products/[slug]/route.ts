@@ -1,19 +1,53 @@
-import { ProductProps } from '@/context/products-context'
-import data from '../products-data.json'
-
 export async function GET(
   _: Request,
   { params }: { params: { slug: string } },
 ) {
-  const productID = parseInt(params.slug)
+  const productID = params.slug
 
-  const product = data.products.find(
-    (product: ProductProps) => product.id === productID,
-  )
-
-  if (!product) {
-    throw new Error(`O Produto com ID ${productID} não foi encontrado.`)
+  if (!process.env.NEXT_HYGRAPH_ENDPOINT) {
+    throw new Error('NEXT_HYGRAPH_ENDPOINT NOT FOUND')
   }
 
-  return Response.json(product)
+  try {
+    const res = await fetch(process.env.NEXT_HYGRAPH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+            query Product($productID: ID!) {
+              product(where: {id: $productID} ) {
+                createdAt
+                id
+                price
+                publishedAt
+                title
+                updatedAt
+                sizes
+                images {
+                  url
+                }
+                categorias
+              }
+            }
+          `,
+        variables: {
+          productID,
+        },
+      }),
+    })
+
+    const { data } = await res.json()
+
+    const { product } = data
+
+    if (!product) {
+      throw new Error(`O Produto com ID ${productID} não foi encontrado.`)
+    }
+
+    return Response.json(product)
+  } catch (error) {
+    console.log('/product/id error: ', error)
+  }
 }
