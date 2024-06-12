@@ -21,7 +21,7 @@ interface ProductsProps {
 export function GetProducts({ products }: ProductsProps) {
   return (
     <>
-      {products.map((product, i) => (
+      {products.map((product) => (
         <Link
           href={`/product/${product.id}`}
           key={product.title}
@@ -29,7 +29,7 @@ export function GetProducts({ products }: ProductsProps) {
         >
           <div className="rounded-md overflow-hidden">
             <Image
-              src={product.images[i].url}
+              src={product.images[0].url}
               alt={product.title}
               width={160}
               height={200}
